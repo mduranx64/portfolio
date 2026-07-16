@@ -45,16 +45,47 @@
           <div class="hero-actions">
             <a class="button button-primary" href="#work" data-i18n="exploreWork">Explore my work</a>
             <a class="text-link" href="https://github.com/mduranx64" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span><span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span></a>
+            <a class="text-link" href="https://www.linkedin.com/in/mduranx64" target="_blank" rel="noreferrer" data-i18n-aria-label="heroLinkedinLabel">LinkedIn <span aria-hidden="true">↗</span><span class="sr-only" data-i18n="newTab"> (opens in a new tab)</span></a>
           </div>
         </div>
 
-        <div class="hero-orbit" aria-hidden="true" data-reveal>
+        <div class="hero-orbit" data-reveal>
           <div class="orbit orbit-one"></div>
           <div class="orbit orbit-two"></div>
-          <div class="phone">
-            <span class="phone-island"></span>
-            <span class="swift-mark">{ }</span>
-            <span class="phone-label">iOS</span>
+          <div class="phone-carousel" role="region" aria-roledescription="carousel" aria-label="Featured App Store screenshots" data-i18n-aria-label="carouselLabel" data-carousel>
+            <div class="phone" tabindex="0" data-carousel-viewport>
+              <span class="phone-button phone-button-silent" aria-hidden="true"></span>
+              <span class="phone-button phone-button-volume-up" aria-hidden="true"></span>
+              <span class="phone-button phone-button-volume-down" aria-hidden="true"></span>
+              <span class="phone-button phone-button-power" aria-hidden="true"></span>
+              <div class="phone-screen">
+                <a class="phone-slide is-active" href="https://apps.apple.com/cl/app/ita%C3%BA-chile/id636150714" target="_blank" rel="noreferrer" aria-label="View Itaú Chile on the App Store (opens in a new tab)" data-i18n-aria-label="itauLinkLabel" aria-hidden="false" data-slide>
+                  <img src="assets/projects/hero-itau-chile.webp" alt="Itaú Chile mobile banking app screenshot" data-i18n-alt="carouselItauAlt" width="750" height="1624" decoding="async">
+                </a>
+                <a class="phone-slide" href="https://apps.apple.com/cl/app/jumbo-app-tu-compra-online/id1450934350" target="_blank" rel="noreferrer" aria-label="View Jumbo on the App Store (opens in a new tab)" data-i18n-aria-label="jumboLinkLabel" aria-hidden="true" tabindex="-1" data-slide>
+                  <img src="assets/projects/hero-jumbo.webp" alt="Jumbo grocery shopping app screenshot" data-i18n-alt="carouselJumboAlt" width="750" height="1624" loading="lazy" decoding="async">
+                </a>
+                <a class="phone-slide" href="https://apps.apple.com/cl/app/falabella-com-compra-online/id947145705" target="_blank" rel="noreferrer" aria-label="View Falabella on the App Store (opens in a new tab)" data-i18n-aria-label="falabellaLinkLabel" aria-hidden="true" tabindex="-1" data-slide>
+                  <img src="assets/projects/hero-falabella.webp" alt="Falabella online shopping app screenshot" data-i18n-alt="carouselFalabellaAlt" width="750" height="1624" loading="lazy" decoding="async">
+                </a>
+                <a class="phone-slide" href="https://apps.apple.com/cl/app/sodimac-casa-y-construcci%C3%B3n/id532353705" target="_blank" rel="noreferrer" aria-label="View Sodimac on the App Store (opens in a new tab)" data-i18n-aria-label="sodimacLinkLabel" aria-hidden="true" tabindex="-1" data-slide>
+                  <img src="assets/projects/hero-sodimac.webp" alt="Sodimac home improvement app screenshot" data-i18n-alt="carouselSodimacAlt" width="750" height="1624" loading="lazy" decoding="async">
+                </a>
+                <a class="phone-slide" href="https://apps.apple.com/cl/app/tottus/id1476096203" target="_blank" rel="noreferrer" aria-label="View Tottus on the App Store (opens in a new tab)" data-i18n-aria-label="tottusLinkLabel" aria-hidden="true" tabindex="-1" data-slide>
+                  <img src="assets/projects/hero-tottus.webp" alt="Tottus grocery shopping app screenshot" data-i18n-alt="carouselTottusAlt" width="750" height="1624" loading="lazy" decoding="async">
+                </a>
+                <span class="phone-island" aria-hidden="true"></span>
+                <span class="phone-reflection" aria-hidden="true"></span>
+              </div>
+            </div>
+            <div class="carousel-dots" role="group" aria-label="Choose featured app" data-i18n-aria-label="carouselControls">
+              <button class="carousel-dot is-active" type="button" aria-label="Show Itaú Chile screenshot" data-i18n-aria-label="showItau" aria-current="true" data-slide-to="0"></button>
+              <button class="carousel-dot" type="button" aria-label="Show Jumbo screenshot" data-i18n-aria-label="showJumbo" data-slide-to="1"></button>
+              <button class="carousel-dot" type="button" aria-label="Show Falabella screenshot" data-i18n-aria-label="showFalabella" data-slide-to="2"></button>
+              <button class="carousel-dot" type="button" aria-label="Show Sodimac screenshot" data-i18n-aria-label="showSodimac" data-slide-to="3"></button>
+              <button class="carousel-dot" type="button" aria-label="Show Tottus screenshot" data-i18n-aria-label="showTottus" data-slide-to="4"></button>
+            </div>
+            <p class="sr-only" aria-live="polite" aria-atomic="true" data-carousel-status></p>
           </div>
         </div>
       </section>

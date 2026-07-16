@@ -13,6 +13,20 @@ const translations = {
     heroTitle: "Building iOS experiences people can rely on.",
     heroIntro: "Selected apps I helped build and ship to the App Store across banking, grocery, retail, and home improvement.",
     exploreWork: "Explore my work",
+    heroLinkedinLabel: "LinkedIn (opens in a new tab)",
+    carouselLabel: "Featured App Store screenshots",
+    carouselControls: "Choose featured app",
+    carouselStatus: "Showing {app}, slide {current} of {total}",
+    showItau: "Show Itaú Chile screenshot",
+    showJumbo: "Show Jumbo screenshot",
+    showFalabella: "Show Falabella screenshot",
+    showSodimac: "Show Sodimac screenshot",
+    showTottus: "Show Tottus screenshot",
+    carouselItauAlt: "Itaú Chile mobile banking app screenshot",
+    carouselJumboAlt: "Jumbo grocery shopping app screenshot",
+    carouselFalabellaAlt: "Falabella online shopping app screenshot",
+    carouselSodimacAlt: "Sodimac home improvement app screenshot",
+    carouselTottusAlt: "Tottus grocery shopping app screenshot",
     newTab: " (opens in a new tab)",
     selectedWork: "Selected work",
     workTitle: "Apps available on the App Store.",
@@ -61,6 +75,20 @@ const translations = {
     heroTitle: "Creando experiencias iOS en las que las personas pueden confiar.",
     heroIntro: "Una selección de apps que ayudé a desarrollar y publicar en App Store para banca, supermercados, retail y mejoramiento del hogar.",
     exploreWork: "Explorar mis proyectos",
+    heroLinkedinLabel: "LinkedIn (se abre en una pestaña nueva)",
+    carouselLabel: "Capturas destacadas de apps en App Store",
+    carouselControls: "Elegir app destacada",
+    carouselStatus: "Mostrando {app}, diapositiva {current} de {total}",
+    showItau: "Mostrar captura de Itaú Chile",
+    showJumbo: "Mostrar captura de Jumbo",
+    showFalabella: "Mostrar captura de Falabella",
+    showSodimac: "Mostrar captura de Sodimac",
+    showTottus: "Mostrar captura de Tottus",
+    carouselItauAlt: "Captura de la app de banca móvil Itaú Chile",
+    carouselJumboAlt: "Captura de la app de compras de supermercado Jumbo",
+    carouselFalabellaAlt: "Captura de la app de compras online Falabella",
+    carouselSodimacAlt: "Captura de la app de mejoramiento del hogar Sodimac",
+    carouselTottusAlt: "Captura de la app de compras de supermercado Tottus",
     newTab: " (se abre en una pestaña nueva)",
     selectedWork: "Proyectos seleccionados",
     workTitle: "Apps disponibles en App Store.",
@@ -109,6 +137,20 @@ const translations = {
     heroTitle: "Criando experiências iOS nas quais as pessoas podem confiar.",
     heroIntro: "Uma seleção de apps que ajudei a desenvolver e lançar na App Store para bancos, supermercados, varejo e reforma e construção.",
     exploreWork: "Explorar meus projetos",
+    heroLinkedinLabel: "LinkedIn (abre em uma nova aba)",
+    carouselLabel: "Capturas em destaque de apps na App Store",
+    carouselControls: "Escolher app em destaque",
+    carouselStatus: "Exibindo {app}, slide {current} de {total}",
+    showItau: "Mostrar captura do Itaú Chile",
+    showJumbo: "Mostrar captura do Jumbo",
+    showFalabella: "Mostrar captura da Falabella",
+    showSodimac: "Mostrar captura da Sodimac",
+    showTottus: "Mostrar captura do Tottus",
+    carouselItauAlt: "Captura do app de banco móvel Itaú Chile",
+    carouselJumboAlt: "Captura do app de compras de supermercado Jumbo",
+    carouselFalabellaAlt: "Captura do app de compras online Falabella",
+    carouselSodimacAlt: "Captura do app de reforma e construção Sodimac",
+    carouselTottusAlt: "Captura do app de compras de supermercado Tottus",
     newTab: " (abre em uma nova aba)",
     selectedWork: "Projetos selecionados",
     workTitle: "Apps disponíveis na App Store.",
@@ -149,6 +191,7 @@ const languageButtons = document.querySelectorAll("[data-language]");
 const descriptionMeta = document.querySelector('meta[name="description"]');
 const openGraphTitle = document.querySelector('meta[property="og:title"]');
 const openGraphDescription = document.querySelector('meta[property="og:description"]');
+let currentLanguage = "en";
 
 const savedLanguage = (() => {
   try {
@@ -161,6 +204,7 @@ const savedLanguage = (() => {
 const setLanguage = (language, persist = true) => {
   const selectedLanguage = translations[language] ? language : "en";
   const copy = translations[selectedLanguage];
+  currentLanguage = selectedLanguage;
 
   document.documentElement.lang = selectedLanguage === "pt" ? "pt-BR" : selectedLanguage;
   document.title = copy.pageTitle;
@@ -192,6 +236,8 @@ const setLanguage = (language, persist = true) => {
     button.setAttribute("aria-pressed", String(button.dataset.language === selectedLanguage));
   });
 
+  document.dispatchEvent(new CustomEvent("portfolio-language-change"));
+
   if (persist) {
     try {
       localStorage.setItem("portfolio-language", selectedLanguage);
@@ -206,6 +252,102 @@ languageButtons.forEach((button) => {
 });
 
 setLanguage(savedLanguage || "en", false);
+
+const carousel = document.querySelector("[data-carousel]");
+
+if (carousel) {
+  const slides = [...carousel.querySelectorAll("[data-slide]")];
+  const dots = [...carousel.querySelectorAll("[data-slide-to]")];
+  const viewport = carousel.querySelector("[data-carousel-viewport]");
+  const status = carousel.querySelector("[data-carousel-status]");
+  const appNames = ["Itaú Chile", "Jumbo", "Falabella", "Sodimac", "Tottus"];
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let activeIndex = 0;
+  let timer = null;
+  let heroVisible = true;
+  let pointerStartX = null;
+  let pointerStartY = null;
+
+  const updateStatus = () => {
+    const template = translations[currentLanguage].carouselStatus;
+    status.textContent = template
+      .replace("{app}", appNames[activeIndex])
+      .replace("{current}", String(activeIndex + 1))
+      .replace("{total}", String(slides.length));
+  };
+
+  const shouldAutoplay = () =>
+    !reducedMotion.matches && heroVisible && !document.hidden && !carousel.matches(":hover") && !carousel.contains(document.activeElement);
+
+  const stopTimer = () => {
+    window.clearTimeout(timer);
+    timer = null;
+  };
+
+  const startTimer = () => {
+    stopTimer();
+    if (!shouldAutoplay()) return;
+    timer = window.setTimeout(() => showSlide(activeIndex + 1, false), 4000);
+  };
+
+  const showSlide = (index, announce = true) => {
+    activeIndex = (index + slides.length) % slides.length;
+    slides.forEach((slide, slideIndex) => {
+      const active = slideIndex === activeIndex;
+      slide.classList.toggle("is-active", active);
+      slide.setAttribute("aria-hidden", String(!active));
+      slide.tabIndex = active ? 0 : -1;
+    });
+    dots.forEach((dot, dotIndex) => {
+      const active = dotIndex === activeIndex;
+      dot.classList.toggle("is-active", active);
+      if (active) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+    if (announce) updateStatus();
+    startTimer();
+  };
+
+  dots.forEach((dot) => dot.addEventListener("click", () => showSlide(Number(dot.dataset.slideTo))));
+  carousel.addEventListener("mouseenter", stopTimer);
+  carousel.addEventListener("mouseleave", startTimer);
+  carousel.addEventListener("focusin", stopTimer);
+  carousel.addEventListener("focusout", () => window.setTimeout(startTimer));
+  carousel.addEventListener("keydown", (event) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    showSlide(activeIndex + (event.key === "ArrowRight" ? 1 : -1));
+  });
+  viewport.addEventListener("pointerdown", (event) => {
+    pointerStartX = event.clientX;
+    pointerStartY = event.clientY;
+  });
+  viewport.addEventListener("pointerup", (event) => {
+    if (pointerStartX === null || pointerStartY === null) return;
+    const deltaX = event.clientX - pointerStartX;
+    const deltaY = event.clientY - pointerStartY;
+    pointerStartX = null;
+    pointerStartY = null;
+    if (Math.abs(deltaX) >= 45 && Math.abs(deltaX) > Math.abs(deltaY)) showSlide(activeIndex + (deltaX < 0 ? 1 : -1));
+  });
+  viewport.addEventListener("pointercancel", () => {
+    pointerStartX = null;
+    pointerStartY = null;
+  });
+  document.addEventListener("visibilitychange", startTimer);
+  document.addEventListener("portfolio-language-change", updateStatus);
+  reducedMotion.addEventListener?.("change", startTimer);
+
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(([entry]) => {
+      heroVisible = entry.isIntersecting;
+      startTimer();
+    }, { threshold: 0.1 }).observe(carousel);
+  }
+
+  updateStatus();
+  startTimer();
+}
 
 const header = document.querySelector("[data-header]");
 const year = document.querySelector("[data-year]");
