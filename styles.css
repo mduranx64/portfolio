@@ -284,8 +284,9 @@ img {
 }
 
 .phone {
+  --phone-width: 250px;
   position: relative;
-  width: 250px;
+  width: var(--phone-width);
   aspect-ratio: 1170 / 2532;
   padding: 7px;
   border: 2px solid #55565d;
@@ -329,14 +330,39 @@ img {
 .phone-island {
   position: absolute;
   z-index: 3;
-  top: 11px;
+  top: 1.85%;
   left: 50%;
-  width: 77px;
-  height: 23px;
+  width: 65px;
+  height: 18px;
+  aspect-ratio: 65 / 18;
   border-radius: 99px;
-  background: #030304;
-  box-shadow: inset -8px 0 12px rgba(32, 37, 49, 0.42);
+  background: linear-gradient(100deg, #000 0 64%, #050508 100%);
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.035), inset 0 1px 1px rgba(255, 255, 255, 0.025), inset -7px 0 10px rgba(9, 14, 29, 0.5);
   transform: translateX(-50%);
+}
+
+.phone-island::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 6.15%;
+  width: 15.4%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, #17254d 0 8%, #081020 18%, #020307 46%, #000 70%);
+  box-shadow: 0 0 0 1px #08090d, inset 0 0 4px rgba(41, 72, 135, 0.55);
+  transform: translateY(-50%);
+}
+
+.phone-island::after {
+  content: "";
+  position: absolute;
+  top: 27.8%;
+  left: 12.3%;
+  width: 40%;
+  height: 33.3%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(22, 28, 39, 0.32), transparent 72%);
 }
 
 .phone-reflection {
@@ -703,12 +729,17 @@ img {
   }
 
   .phone {
-    width: 190px;
+    --phone-width: 190px;
     border-radius: 40px;
   }
 
   .phone-screen {
     border-radius: 33px;
+  }
+
+  .phone-island {
+    width: 49px;
+    height: 13.6px;
   }
 
   .phone-carousel {
